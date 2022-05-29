@@ -78,7 +78,7 @@ netease_comment: false
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "郝俊卿(Alex)<br>\"一个普通到不能再普通的iOS工程师。\"<br> An iOS developer, period."
+sidebar-about-description: "郝俊卿(Alex)<br>\"一只普通的iOS工程狮  |  非职业产品经理兼设计狮\""
 sidebar-avatar: img/avatar-me.jpg # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
