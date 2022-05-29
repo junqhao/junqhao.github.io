@@ -45,3 +45,20 @@ multilingual: true
 </script>
 <!-- disqus 公共JS代码 end -->
 {% endif %}
+
+
+{% if site.valine_appid && site.valine_appkey %}
+<!-- valine 评论框 start -->
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<div id="vcomments"></div>
+<script>
+var valine_appid = "{{site.valine_appid}}";
+var valine_appkey = "{{site.valine_appkey}}";
+new Valine({
+    el: '#vcomments',
+    appId: valine_appid,
+    appKey: valine_appkey,
+})
+</script>
+<!-- valine 评论框 end -->
+{% endif %}

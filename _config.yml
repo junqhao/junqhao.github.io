@@ -59,11 +59,14 @@ kramdown:
 
 
 # Disqus settings
-disqus_username: junqhao
+disqus_username: false
 
 # Netease settings
 netease_comment: false
 
+#Valine
+valine_appid: H0wblkpqf81z5ahnorlCcCUi-gzGzoHsz
+valine_appkey: lH77m4IAOou4omSSIM9RrM0M
 
 
 # Analytics settings
