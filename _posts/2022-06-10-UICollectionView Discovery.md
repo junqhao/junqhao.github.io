@@ -205,11 +205,11 @@ sectionHeader的y是上一个section的maxY，sectionFooter的Y是当前section�
 
 在滑动过程中，系统会时不时的调用layoutAttributesForSupplementaryViewOfKind来获得最新的SupplementaryView位置，因此我们的吸顶也要在这里做文章。这里不多说，自己打断点跑一下就知道咋回事了。但需要注意的是，当视野中有2个sectionHeader的时候，系统可能只会调用一个section，而且是最后面的那个，所以我们必须同时处理上一个sectionHeader的frame才能保证所有header的位置绝对正确。
 ~~~objc
-y = [self getFooterY:attr];
-//需要同时处理上一个footer的位置
+y = [self getHeaderY:attr];
+//需要同时处理上一个header的位置
 if(section > 0){
-    UICollectionViewLayoutAttributes *lastAttr = [self findSectionAttributes:[NSIndexPath    indexPathForRow:0 inSection:section-1] kind:elementKind];
-    CGFloat y = [self getFooterY:lastAttr];
+    UICollectionViewLayoutAttributes *lastAttr = [self findSectionAttributes:[NSIndexPath indexPathForRow:0 inSection:section-1] kind:elementKind];
+    CGFloat y = [self getHeaderY:lastAttr];
     CGRect frame = lastAttr.frame;
     frame.origin.y = y;
     lastAttr.frame = frame;
@@ -246,7 +246,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 这个方法的调用时机基本和scrollView滚动触发的代理方法时机一致，调用比较频繁，这个rect应该就是指滚动是当前可视区域。也就是说系统需要知道当前应该把哪些layout绘制出来，这里无脑返回全部的attributes最简单。当然为了性能优化，你可以计算下每个attributes的是不是在当前rect内，把符合要求的attributes放到一个新数组里返回就好，也不难。
 
 #### shouldInvalidateLayoutForBoundsChange
-该方法和 _layoutAttributesForElementsInRect_ 一样也被频发调用，默认return NO，也就是在bounds发生变化时要不要重新布局，return YES的话就会触发 _prepareLayout_ 。一样情况我们不需要return YES，因为实测大多数数据源或者布局变化时，系统都会调用 _prepareLayout_。但当我们需要吸顶功能时，这里必须是YES了，原因刚才说过了。我也尝试监听了父类布局在设置header吸顶时会不会return YES，答案也是显而易见的。
+该方法和 _layoutAttributesForElementsInRect_ 一样也被频发调用，默认return NO，也就是在bounds发生变化时要不要重新布局，return YES的话就会触发 _prepareLayout_ 。一般情况我们不需要return YES，因为实测大多数数据源或者布局变化时，系统都会调用 _prepareLayout_。但当我们需要吸顶功能时，这里必须是YES了，原因刚才说过了。我也尝试监听了父类布局在设置header吸顶时会不会return YES，答案也是显而易见的。
 
 #### LayoutAttributes的复用
 由于以上的方法系统会不定时调用一下，很多都需要返回attributes实例，这里如果你觉得直接新建一个不是最简单吗那就错了。抛开性能开销不说，你返回的frame也不一定是对的，因为系统并不是每次调用 _layoutAttributesForItemAtIndexPath_ 之前都重新 _prepareLayout_ 了，所以你再按照新建的frame返回给系统肯定不对了，所以你要复用。在上述覆盖的系统方法里，你最好都复用已存在的attributes。
