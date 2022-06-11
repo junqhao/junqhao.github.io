@@ -276,12 +276,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
     [self layoutIfNeeded];
     CGSize size = [self.contentView systemLayoutSizeFittingSize: layoutAttributes.size];
     CGRect cellFrame = layoutAttributes.frame;
-    
-    if(self.isScrollVertical){
-        cellFrame.size.height = ceil(size.height);
-    }else{
-        cellFrame.size.width = ceil(size.width);
-    }
+    cellFrame.size.height = ceil(size.height);
     return layoutAttributes;
 }
 ~~~
@@ -289,7 +284,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 当然难点不在这里，因为你会发现到这里瀑布流并不能正常显示，相反直接崩了...&#x1F972;
 ![](/img/post/2022-06-10-9.png)
 这里说我们的collectionView陷入了无止境的更新布局循环，原因就是刚刚我们改变了已有的layoutAttributes
-。现在只有collectionView知道这个事儿了，但我们的layout还蒙着呢! 我发现当所有cell经历完 _preferredLayoutAttributesFittingAttributes_ 之后，系统还会再调用1到2次的 _prepareLayout_ ，如果我们不更新这里的attributes，那肯定不行。所以我采用的方式是在layout中持有一个对象用来记录更新的attributes，key是indexPath，value是真实size，并在需要更新真实size的地方全都重新设置一边，这样就ok了。
+。现在只有collectionView知道这个事儿了，但我们的layout还蒙着呢! 我发现当所有cell经历完 _preferredLayoutAttributesFittingAttributes_ 之后，系统还会再调用1到2次的 _prepareLayout_ ，如果我们不更新这里的attributes，那肯定不行。所以我采用的方式是在layout中持有一个对象用来记录更新的attributes，key是indexPath，value是真实size，并在需要更新真实size的地方全部重新设置一遍，这样就ok了。
 ~~~objc
 -(void)setActualSize:(UICollectionViewLayoutAttributes *)attributes isInit:(BOOL)isInit{
     NSValue *value = [self.actualItemSizes objectForKey:attributes.indexPath];
@@ -306,8 +301,8 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 ~~~
 
 ### 瀑布流元素的增加和删除
-如果你定制的layout不能很好的适应增加和删除，那一定是写得还有问题。<br>
-搞过tableView增删的都应该知道了，3步走:
+如果你定制的layout不能很好的适应增加和删除操作，那一定是写的还有问题。<br>
+搞过tableView增删的应该都知道了，3步走:
 1. 增加/删除数据源
 2. 调用tableView对应的更新方法
 3. reload
