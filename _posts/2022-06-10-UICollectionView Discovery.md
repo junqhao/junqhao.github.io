@@ -78,7 +78,7 @@ shouldInvalidateLayoutForBoundsChange:
 
 #### prepareLayout
 
-prepareLayout 该方法主要负责布局的准备工作，你可以在这个方法中创建每个元素的布局属性（layoutAttributes）。这个方法很神奇，它由系统调用，如果覆盖则一定要调用super，它在collectionView刷新数据时一定会调用，同时当滑动时contentSize发生了变化时系统也会调用，尤其是使用了autolayout之后，你会发现它的调用次数远比纯frame来的多。在layout中，使用一个嵌套的数组来保存所有的attributes。
+prepareLayout 该方法主要负责布局的准备工作，你可以在这个方法中创建每个元素的布局属性（layoutAttributes）。这个方法很神奇，它由系统调用，如果覆盖则一定要调用super，它在collectionView刷新数据时一定会调用，同时当滑动时contentSize发生了变化时系统也会调用，尤其是使用了autolayout之后，你会发现它的调用次数远比纯frame来的多。我在layout中，使用一个二维的数组来保存所有的attributes，当然你也可以使用一个一维的数组，根据实际情况来就好。
 ~~~objc
 @property (nonatomic, strong) NSMutableArray <NSMutableArray<__kindof UICollectionViewLayoutAttributes *>*> *groupedAttributes;
 ~~~
@@ -218,7 +218,7 @@ if(section > 0){
 #### layoutAttributesForDecorationViewOfKind
 
 DecorationView这玩意儿，十年的老司机都不一定知道，原来collecitonView还有个这。Decoration顾名思义装饰，它是用来给section或cell提供装饰的view。section？咩错，原来你一直都可以给整个section加个背景图，还在一点点修改cell的背景吗？恭喜你收到了来自十年前苹果的微笑 &#x1F642; <br>
-DecorationView也是一种UICollectionReusableView，所以它是可以被复用的，但奇葩的是它只由layout进行管理，因此对它的注册是在layout中进行的。在开放协议中，我定义了如下方法可以在外面传入自定义的DecorationView，这样就通用多了。与SupplementaryView不太一样的是这里注册的kind好像必须是类名，随便写个字符串会崩溃。
+DecorationView是一个可以位于z轴上的view，也就是说他可以盖在其他视图之上或者之下，attributes对象有一个zIndex属性用来控制一个view在z轴上的层级。DecorationView也是一种UICollectionReusableView，所以它是可以被复用的，但奇葩的是它只由layout进行管理，因此对它的注册是在layout中进行的。在开放协议中，我定义了如下方法可以在外面传入自定义的DecorationView，这样就通用多了。与SupplementaryView不太一样的是这里注册的kind好像必须是类名，随便写个字符串会崩溃。
 ~~~objc
 NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:indexPath.section];
     if(![className isKindOfClass:[NSString class]]) return nil;
