@@ -82,7 +82,7 @@ shouldInvalidateLayoutForBoundsChange:
 @property (nonatomic, strong) NSMutableArray <NSMutableArray<__kindof UICollectionViewLayoutAttributes *>*> *groupedAttributes;
 ~~~
 
-由于layout对象可以拿到collectionView对象，因为我们可以得到当前整体的数据结构，因而可以逐个计算每个attributes，并保存到groupedAttributes中。
+由于layout对象可以取到当前的collectionView，因此我们可以得到当前整体的数据结构，从而可以逐个创建每个attributes，并将它们保存到groupedAttributes中。
 ~~~objc
 - (void)prepareLayout {
     [super prepareLayout];
