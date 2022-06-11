@@ -265,11 +265,11 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 ### 瀑布流与AutoLayout
 我一直是autoLayout的忠诚拥护者，我认为既然搞封装，你就应该让人家既能用frame也能用autoLayout来使用。任何打着追求极致性能的幌子而强迫使用frame的人，都只是给自己不想改变找的借口罢了。所以我的JHListViewFlowLayout必须支持autoLayout。<br>
 也就是说你的cell可以使用Masonry/SnapKit基于约束的布局方案，而不用去挨个计算恶心的高度了。在瀑布流里使用autoLayout并应对各种场景，如增加删除元素，旋转屏幕等，我的实验应该是目前相对比较全面的一个了。<br>
-要想实现高度自适应，首先你要设置一个给layout设置一个estimatedSize，即预估的size，这里设置成多大都行，除了sizezero，当然肯定和实际大小越接近越好。<br>
+要想实现高度自适应，首先你要给layout设置一个estimatedSize，即预估的size，这里设置成多大都行，除了sizezero，当然肯定和实际大小越接近效果越好。<br>
 接着苹果会告诉你在你自定义的cell里重写 _preferredLayoutAttributesFittingAttributes_ 方法，下面是关于这个方法的介绍:
 > The default implementation of this method returns the same attributes that are in the layoutAttributes parameter. You can override this method in subclasses and use it to return a different set of attributes. If you override this method, call super first to give the system the opportunity to make changes, then modify the returned attributes.
 
-正常情况对于每个cell，系统都会传入一个在layout里面算好的layoutAttributes，你可以在这个方法中重新赋予其理想的frame，并进行返回。因此，在约束布局中，我们在这里调用 _[self layoutIfNeeded]_ 拿到准确的size后即可以重新设置frame了。
+正常情况对于每个cell，系统都会传入一个在layout里面算好的layoutAttributes，你可以在这个方法中重新赋予其理想的frame，并返回。因此，在约束布局中，我们在该方法中调用 _[self layoutIfNeeded]_ 拿到准确的size后即可重新设置frame了。
 ~~~objc
 -(UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes{
     [self setNeedsLayout];
