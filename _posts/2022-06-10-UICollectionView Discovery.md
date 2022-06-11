@@ -33,7 +33,7 @@ UICollectionViewFlowLayout是UICollectionViewLayout的子类，基于基类提�
 ## 自定义UICollectionViewLayout
 那么只用系统默认的UICollectionViewFlowLayout是否可以实现瀑布流呢，答案是可以，只是可能不是你心中的瀑布流样式。
 
-![](/img/post/2022-06-10-4.png){:width="30%"}
+![](/img/post/2022-06-10-4.png){:width="40%"}
 
 As you can tell，当只有一列数据的时候，collectionView可以说和tableView实现效果一致，当列数增多后，每行数据会默认按x轴对称布局，这并不符合我们的要求，因此我们还是需要自定义layout，但这也就意味着你要放弃super帮你做的好多工作了，这个稍后你就会了解到。<br>
 在设计layout时，我们需要定制一些方法来区别于系统接口，或者提供一些定制能力给业务方，因此，我们可以设计一个协议，委托给需要实现的业务方。
@@ -297,7 +297,8 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
     }
     CGRect frame = attributes.frame;
     frame.size.height = actualHeight;
-    attributes.frame = frame;    
+    attributes.frame = frame;
+    ...
 }
 ~~~
 
@@ -307,6 +308,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 1. 增加/删除数据源
 2. 调用tableView对应的更新方法
 3. reload
+
 其实collectionView大同小异，你可以生硬的编写上述代码，或者像下面这样:
 
 ~~~objc
@@ -335,5 +337,5 @@ UICollectionView通过自定义布局可以实现很多复杂的布局形态而�
 
 |![](/img/post/2022-06-10-7.png)|![](/img/post/2022-06-10-5.png)|![](/img/post/2022-06-10-6.png)|
 
-![](/img/post/2022-06-10-8.gif){:width="30%"}
+![](/img/post/2022-06-10-8.gif){:width="40%"}
 
