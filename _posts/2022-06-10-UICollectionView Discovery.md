@@ -35,8 +35,7 @@ UICollectionViewFlowLayout是UICollectionViewLayout的子类，基于基类提�
 
 ![](/img/post/2022-06-10-4.png){:width="30%"}
 
-As you can tell，当只有一列数据的时候，collectionView可以说和tableView实现效果一致，当列数增多后，每行数据会默认按x轴对称布局，这并不符合我们的要求，因此我们还是需要自定义layout，但这也就意味着你要放弃super帮你做的好多工作了，这个稍后你就会了解到。
-
+As you can tell，当只有一列数据的时候，collectionView可以说和tableView实现效果一致，当列数增多后，每行数据会默认按x轴对称布局，这并不符合我们的要求，因此我们还是需要自定义layout，但这也就意味着你要放弃super帮你做的好多工作了，这个稍后你就会了解到。<br>
 在设计layout时，我们需要定制一些方法来区别于系统接口，或者提供一些定制能力给业务方，因此，我们可以设计一个协议，委托给需要实现的业务方。
 
 ~~~objc
@@ -78,7 +77,7 @@ shouldInvalidateLayoutForBoundsChange:
 
 #### prepareLayout
 
-prepareLayout 该方法主要负责布局的准备工作，你可以在这个方法中创建每个元素的布局属性（layoutAttributes）。这个方法很神奇，它由系统调用，如果覆盖则一定要调用super，它在collectionView刷新数据时一定会调用，同时当滑动时contentSize发生了变化时系统也会调用，尤其是使用了autolayout之后，你会发现它的调用次数远比纯frame来的多。我在layout中，使用一个二维的数组来保存所有的attributes，当然你也可以使用一个一维的数组，根据实际情况来就好。
+该方法主要负责布局的准备工作，你可以在这个方法中创建每个元素的布局属性（layoutAttributes）。这个方法很神奇，它由系统调用，如果覆盖则一定要调用super，它在collectionView刷新数据时一定会调用，同时当滑动时contentSize发生了变化时系统也会调用，尤其是使用了autolayout之后，你会发现它的调用次数远比纯frame来的多。我在layout中，使用一个二维的数组来保存所有的attributes，当然你也可以使用一个一维的数组，根据实际情况来就好。
 ~~~objc
 @property (nonatomic, strong) NSMutableArray <NSMutableArray<__kindof UICollectionViewLayoutAttributes *>*> *groupedAttributes;
 ~~~
@@ -143,12 +142,12 @@ prepareLayout 该方法主要负责布局的准备工作，你可以在这个方
 y += headerSize.height + insets.top + [self getMinYinSection:section];
 ~~~
 
-这里，我封装了2个方法用来计算每个section中最大的Y和最小的Y，当然他们内部是会互相调用的。
+这里，我封装了2个方法用来计算每个section中最大的Y和最小的Y，当然他们内部在某些临界场景是会互相调用的。
 ~~~objc
 - (CGFloat)getMaxYinSection:(NSInteger)section withFooter:(BOOL)withFooter;
 - (CGFloat)getMinYinSection:(NSInteger)section;
 ~~~
-由此，我们可以去计算所有item的位置了:
+至此，我们可以去计算所有item的位置了:
 ~~~objc
 NSMutableDictionary *sectionItemYs = self.maxEnds[section];
 CGFloat minY = [[sectionItemYs objectForKey:@(0)] floatValue];
@@ -171,7 +170,9 @@ for (int col = 0; col < columns; col ++) {
 
 #### layoutAttributesForSupplementaryViewOfKind
 
-SupplementaryView对标的是tableView的sectionHeaderView和sectionFooterView，使用kind区分为UICollectionElementKindSectionHeader和UICollectionElementKindSectionFooter。<br>sectionHeadr的y是上一个section的maxY，sectionFooter的Y是当前section的maxY，只要捋清楚这点，就好办了。<br>再来说说吸顶效果吧，这个就是我在前面说的继承的副作用，那就是父类的吸顶效果你用不了咯~为啥呢？因为父类只会按照他默认的方式去计算header的位置，已经不再适合你的header位置了，除非你的布局contentSize也好，每个section的size也好都和父类计算的一样，你才能直接调用super方法。那么我们就需要自己实现吸顶了，真的坑。
+SupplementaryView对标的是tableView的sectionHeaderView和sectionFooterView，使用kind区分为UICollectionElementKindSectionHeader和UICollectionElementKindSectionFooter。<br>
+sectionHeader的y是上一个section的maxY，sectionFooter的Y是当前section的maxY，只要捋清楚这点，就好办了。<br>
+再来说说吸顶效果吧，这个就是我在前面说的继承的副作用，那就是父类的吸顶效果你用不了咯~为啥呢？因为父类只会按照他默认的方式去计算header的位置，已经不再适合你的header位置了，除非你的布局contentSize、每个section的size都恰好和父类计算的结果一样，你才能直接使用super，否则我们就需要自己实现吸顶了，真的坑。
 ~~~objc
 -(CGFloat)getHeaderY:(UICollectionViewLayoutAttributes *)attr{
     if(!attr) return 0;
@@ -190,7 +191,7 @@ SupplementaryView对标的是tableView的sectionHeaderView和sectionFooterView�
         }else if(offsetY >y && offsetY <= pinMaxY){ //吸顶的位置
             //NSLog(@"\n 分支2 section:%ld,offsetY:%.2f,y:%.2f,maxY:%.2f",section,offsetY,y,pinMaxY);
             y = offsetY;
-            attr.zIndex = 1024;
+            attr.zIndex = 1024; //悬浮在最上方
         }
         else{ //移动上去
             //NSLog(@"\n 分支3 section:%ld,offsetY:%.2f,y:%.2f,maxY:%.2f",section,offsetY,y,pinMaxY);
@@ -233,7 +234,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 
 #### collectionViewContentSize
 
-顾名思义该方法要求返回collectionView的ContentSize，通过实验得来的经验，这里最好进行实时计算才会比较准确，尽量少在代码里使用标记变量是个好习惯。详细计算contentWidth，contentHeight比较简单，直接看源码就能懂。
+顾名思义该方法要求返回collectionView的ContentSize，通过实践得来的经验，这里最好进行实时计算才会比较准确，尽量少在代码里使用标记变量是个好习惯。详细计算contentWidth，contentHeight比较简单，直接看源码就能懂。
 ~~~objc
 //重写get方法，实时计算出结果
 - (CGSize)collectionViewContentSize{
@@ -245,7 +246,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 这个方法的调用时机基本和scrollView滚动触发的代理方法时机一致，调用比较频繁，这个rect应该就是指滚动是当前可视区域。也就是说系统需要知道当前应该把哪些layout绘制出来，这里无脑返回全部的attributes最简单。当然为了性能优化，你可以计算下每个attributes的是不是在当前rect内，把符合要求的attributes放到一个新数组里返回就好，也不难。
 
 #### shouldInvalidateLayoutForBoundsChange
-该方法和 _layoutAttributesForElementsInRect_ 一样也被频发调用，默认return NO，也就是在bounds发生变化时要不要重新布局，return YES的话就会触发 _prepareLayout_ 。一样情况我们不需要return YES，因为实测大多数数据源或者布局变化时，系统都会调用 _prepareLayout_。但当我们需要吸顶功能时，这里必须是YES了，原因刚才说过了。
+该方法和 _layoutAttributesForElementsInRect_ 一样也被频发调用，默认return NO，也就是在bounds发生变化时要不要重新布局，return YES的话就会触发 _prepareLayout_ 。一样情况我们不需要return YES，因为实测大多数数据源或者布局变化时，系统都会调用 _prepareLayout_。但当我们需要吸顶功能时，这里必须是YES了，原因刚才说过了。我也尝试监听了父类布局在设置header吸顶时会不会return YES，答案也是显而易见的。
 
 #### LayoutAttributes的复用
 由于以上的方法系统会不定时调用一下，很多都需要返回attributes实例，这里如果你觉得直接新建一个不是最简单吗那就错了。抛开性能开销不说，你返回的frame也不一定是对的，因为系统并不是每次调用 _layoutAttributesForItemAtIndexPath_ 之前都重新 _prepareLayout_ 了，所以你再按照新建的frame返回给系统肯定不对了，所以你要复用。在上述覆盖的系统方法里，你最好都复用已存在的attributes。
@@ -263,8 +264,8 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 ~~~
 
 ### 瀑布流与AutoLayout
-我一直是autoLayout的忠诚拥护者，我认为既然搞封装，你就应该让人家既能用frame也能用autoLayout来使用。任何打着追求极致性能的幌子而强迫使用frame的人，都只是给自己不想改变找的借口罢了。所以我的JHListViewFlowLayout必须支持autoLayout。<br>
-也就是说你的cell可以使用Masonry/SnapKit基于约束的布局方案，而不用去挨个计算恶心的高度了。在瀑布流里使用autoLayout并应对各种场景，如增加删除元素，旋转屏幕等，我的实验应该是目前相对比较全面的一个了。<br>
+我一直是autoLayout的忠诚拥护者，我认为既然搞封装，你就应该让人家既能通过frame也能通过autoLayout来使用。任何打着追求极致性能的幌子而强迫去使用frame的人，都只是给自己不想改变找的借口罢了。所以我的JHListViewFlowLayout必须支持autoLayout。<br>
+也就是说你的cell可以使用Masonry/SnapKit基于约束的布局方案，而不用去挨个计算恶心的高度了。在瀑布流里使用autoLayout并应对各种场景，如增加删除元素，旋转屏幕等，我的实践应该是目前相对比较全面的一个了。<br>
 要想实现高度自适应，首先你要给layout设置一个estimatedSize，即预估的size，这里设置成多大都行，除了sizezero，当然肯定和实际大小越接近效果越好。<br>
 接着苹果会告诉你在你自定义的cell里重写 _preferredLayoutAttributesFittingAttributes_ 方法，下面是关于这个方法的介绍:
 > The default implementation of this method returns the same attributes that are in the layoutAttributes parameter. You can override this method in subclasses and use it to return a different set of attributes. If you override this method, call super first to give the system the opportunity to make changes, then modify the returned attributes.
@@ -283,8 +284,8 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 
 当然难点不在这里，因为你会发现到这里瀑布流并不能正常显示，相反直接崩了...&#x1F972;
 ![](/img/post/2022-06-10-9.png)
-这里说我们的collectionView陷入了无止境的更新布局循环，原因就是刚刚我们改变了已有的layoutAttributes
-。现在只有collectionView知道这个事儿了，但我们的layout还蒙着呢! 我发现当所有cell经历完 _preferredLayoutAttributesFittingAttributes_ 之后，系统还会再调用1到2次的 _prepareLayout_ ，如果我们不更新这里的attributes，那肯定不行。所以我采用的方式是在layout中持有一个对象用来记录更新的attributes，key是indexPath，value是真实size，并在需要更新真实size的地方全部重新设置一遍，这样就ok了。
+这里说我们的collectionView陷入了永无止境的更新布局循环，原因正是刚刚我们改变了已有的layoutAttributes
+。因为到现在只有collectionView知道这个事儿了，但我们的layout还蒙着呢! 我发现当所有cell经历完 _preferredLayoutAttributesFittingAttributes_ 之后，系统还会再调用1到2次的 _prepareLayout_ ，如果我们不更新这里对应的attributes，那肯定不行，前后出现不一致，collectionView自然会认为它一直需要更新，所以就无限循环下去最终崩溃。所以我采用的方式是在layout中持有一个对象用来记录更新的attributes，key是indexPath，value是真实size，并在需要更新真实size的地方全部重新设置一遍，这样就ok了。
 ~~~objc
 -(void)setActualSize:(UICollectionViewLayoutAttributes *)attributes isInit:(BOOL)isInit{
     NSValue *value = [self.actualItemSizes objectForKey:attributes.indexPath];
