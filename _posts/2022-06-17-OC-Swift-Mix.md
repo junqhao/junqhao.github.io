@@ -17,6 +17,11 @@ OC库开启modular模式，build setting->define module->YES
 
 OC主工程新建一个swift文件就可以，会提示是否自动创建一个 ProjectName-Bridging-Header.h的桥接文件，创建成功后就是混编模式了。没有自动创建的，自己查一下怎么手动创建吧。
 
+## @objc @objcMembers open public
+swift要想被oc访问到的前提是需要使用关键字 @objc @objcMembers,这2个关键字的区别是声明了@objcMembers会为内部的属性和方法都自动加上@objc。
+
+默认访问权限是internal，模块内部访问，如果需要暴露给外部，至少需要是public，如果需要继承则应该是open
+
 ## 不同的混编场景
 
 ### Pod内部混编的互相调用
@@ -31,7 +36,7 @@ OC主工程新建一个swift文件就可以，会提示是否自动创建一个 
 
 | 调用方 | 被调用方 | 方式 | 
 | OC | OC | #import "xxx.h" |
-| OC | swift | 直接使用 | 
+| OC | swift | #import "ProjectName-Swift.h" | 
 | swift | OC | 在ProjectName-Bridging-Header.h 添加 import "xxx.h" |
 | swift | swift | 直接使用 |
 
