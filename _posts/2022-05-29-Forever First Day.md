@@ -3,8 +3,8 @@ layout:     post
 title:      "永远的第一天"
 subtitle:   " \"Hello World, Hello Blog\""
 date:       2022-05-29 15:30:00
-author:     "Alex"
-header-img: "img/post/2022-05-29.jpg"
+author:     "Self"
+header-img: "img/post/20220529/2022-05-29.jpg"
 header-mask: 0.3
 catalog: true
 tags:

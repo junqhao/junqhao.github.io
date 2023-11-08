@@ -19,7 +19,7 @@ github_username:    junqhao
 twitter_username:   
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
-
+xiaohongshu_id : 5aadd40f11be104efc93c07b
 
 
 # Build settings
@@ -81,8 +81,8 @@ valine_appkey: lH77m4IAOou4omSSIM9RrM0M
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "郝俊卿(Alex)<br>\"一只普通的iOS工程狮  |  非职业产品经理兼设计狮\""
-sidebar-avatar: img/avatar-me.jpg # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "iOS工程🦁<br>非职业产品经理 & UI设计师🎨<br>资深🎵鉴赏家<br>流浪🐱的好朋友"
+sidebar-avatar: ../img/avatar-me.jpg # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 

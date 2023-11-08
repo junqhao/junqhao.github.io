@@ -3,7 +3,7 @@ layout:     post
 title:      "OC+Swift 混编知多少"
 subtitle:   "简单记录自己在混编时遇到的困惑"
 date:       2022-06-17 15:30:00
-author:     "Alex"
+author:     "Self"
 header-style: text
 catalog: true
 tags:

@@ -3,10 +3,10 @@ layout:     post
 title:      "iOS UICollectionView自定义布局初探: 瀑布流实践"
 #subtitle:   " \"Hello World, Hello Blog\""
 date:       2022-06-10 16:00:00
-author:     "Alex"
+author:     "Self"
 header-style: text
 #header-mask: 0.5
-#header-img: "img/post/2022-05-29.jpg"
+#header-img: "img/post/20220610/2022-05-29.jpg"
 catalog: true
 tags:
     - iOS
@@ -19,7 +19,7 @@ tags:
 ## 瀑布流简介
 瀑布流作为一种推荐内容的载体如今已广泛应用在各种主流产品中，其内容的呈现形式多是无序的，内容本身多与用户喜好呈正相关，其优点就是可以让用户在无限滚动中"淘宝"。典型的瀑布流多为2列的纵向形态，当然也包括横向展示形式，如appstore的专题推荐。
 
-|![](/img/post/2022-06-10-1.png)|![](/img/post/2022-06-10-2.png)|![](/img/post/2022-06-10-3.png)|
+|![](/img/post/20220610/2022-06-10-1.png)|![](/img/post/20220610/2022-06-10-2.png)|![](/img/post/20220610/2022-06-10-3.png)|
 
 古早时期有使用多列tableView或者自定义scrollView的方式实现瀑布流布局的，在苹果提供了UICollectionView之后，大家普遍采用定制UICollectionViewLayout的方式实现瀑布流。在UITableView的单列展示形态中，开发者只需要关注每一行的高度即可，布局相对简单单一，对于collectionView来说，其支持多维的布局，除了一般的x、y轴方向外，还包括z轴方向([DecorationView](#layoutattributesfordecorationviewofkind))，因此苹果开发了一套layout用来绑定到collectionView上，将每个元素(Item)的布局交由开发者自定义，这也就是我们在创建一个collectionView实例时需要传入一个layout参数的原因。
 
@@ -33,7 +33,7 @@ UICollectionViewFlowLayout是UICollectionViewLayout的子类，基于基类提�
 ## 自定义UICollectionViewLayout
 那么只用系统默认的UICollectionViewFlowLayout是否可以实现瀑布流呢，答案是可以，只是可能不是你心中的瀑布流样式。
 
-![](/img/post/2022-06-10-4.png){:width="40%"}
+![](/img/post/20220610/2022-06-10-4.png){:width="40%"}
 
 As you can tell，当只有一列数据的时候，collectionView可以说和tableView实现效果一致，当列数增多后，每行数据会默认按x轴对称布局，这并不符合我们的要求，因此我们还是需要自定义layout，但这也就意味着你要放弃super帮你做的好多工作了，这个稍后你就会了解到。<br>
 在设计layout时，我们需要定制一些方法来区别于系统接口，或者提供一些定制能力给业务方，因此，我们可以设计一个协议，委托给需要实现的业务方。
@@ -283,7 +283,7 @@ NSString *className = [self jhListViewFlowLayoutDecorationViewClassAtSection:ind
 ~~~
 
 当然难点不在这里，因为你会发现到这里瀑布流并不能正常显示，相反直接崩了...&#x1F972;
-![](/img/post/2022-06-10-9.png)
+![](/img/post/20220610/2022-06-10-9.png)
 这里说我们的collectionView陷入了永无止境的更新布局循环，原因正是刚刚我们改变了已有的layoutAttributes
 。因为到现在只有collectionView知道这个事儿了，但我们的layout还蒙着呢! 我发现当所有cell经历完 _preferredLayoutAttributesFittingAttributes_ 之后，系统还会再调用1到2次的 _prepareLayout_ ，如果我们不更新这里对应的attributes，那肯定不行，前后出现不一致，collectionView自然会认为它一直需要更新，所以就无限循环下去最终崩溃。所以我采用的方式是在layout中持有一个对象用来记录更新的attributes，key是indexPath，value是真实size，并在需要更新真实size的地方全部重新设置一遍，这样就ok了。
 ~~~objc
@@ -335,7 +335,7 @@ UICollectionView通过自定义布局可以实现很多复杂的布局形态而�
 
 [JHUIkit](https://github.com/junqhao/JHUIKit)
 
-|![](/img/post/2022-06-10-7.png)|![](/img/post/2022-06-10-5.png)|![](/img/post/2022-06-10-6.png)|
+|![](/img/post/20220610/2022-06-10-7.png)|![](/img/post/20220610/2022-06-10-5.png)|![](/img/post/20220610/2022-06-10-6.png)|
 
-![](/img/post/2022-06-10-8.gif){:width="40%"}
+![](/img/post/20220610/2022-06-10-8.gif){:width="40%"}
 
