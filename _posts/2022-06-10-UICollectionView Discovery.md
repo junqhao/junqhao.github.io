@@ -11,9 +11,7 @@ catalog: true
 tags:
     - iOS
     - OC
-    - Swift
     - UIKit
-    - 瀑布流
 ---
 
 ## 瀑布流简介
