@@ -3,7 +3,7 @@ title: Junqing's Blog
 SEOTitle: junqhao
 header-img: img/home-bg.jpg
 email: junqing_hao@qq.com
-description: "脚踏实地的梦想家 | 郝俊卿，Software Engineer，iOS Developer | 这里是郝俊卿的博客，记录生活，分享热爱。"
+description: "平凡之路 | 郝俊卿 | iOS Developer | 这里是Junqing的Blog，记录生活，分享热爱。"
 keyword: "haojunqing, 郝俊卿, junqhao, 俊卿的博客, JunqingHao Blog, 博客, 个人网站, 互联网, iOS, Swift, 客户端"
 url: "https://junqhao.cc"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
@@ -20,7 +20,7 @@ twitter_username:
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
 xiaohongshu_id : 5aadd40f11be104efc93c07b
-
+neteasemusic_id : 78938510
 
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.

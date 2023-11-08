@@ -1,6 +1,8 @@
-Hi,there. It's Junqing Hao(Alex). <br>
-I graduated from Beijing Institute of Technology (BIT) with an engineering master's degree in 2019.<br>
-I got my bachelor degree of Software Engineering from Harbin Engineering University (HEU) in 2016.<br>
-I'm an iOS developer and currently working at [Netease](http://netease.com). I'm focusing on new tech research, efficiency tools, SDK optimization and other issues. In the past, I worked at [iQIYI](https://www.iqiyi.com), dedicated on the development of basic user experience. What's more, I had participated in the translation of the book "Recommender Systems " by Charu C. Aggarwal.<br>
-I believe 『it's never too late to get started』, let's strive for a better life!<br>
-Welcome to follow My [Github](https://github.com/junqhao).
+Hi, there. It's Junqing Hao. <br><br>
+I graduated from Beijing Institute of Technology (BIT) with an Master's Degree in Engineering in 2019.<br><br>
+Now I'm an iOS developer and currently working at [Netease](http://netease.com). My duty job is developing several apps of [Youdao](https://shared.youdao.com/www/about.html). Besides, I focus on doing research of  new technologies, making efficiency & debugging tools, optimizing CICD process, etc. I once worked at [iQIYI](https://www.iqiyi.com), dedicated on the development of base functions.<br><br> 
+In addition to coding, I'm also cultivating my product sense and capabilities of designing. I pay daily attention to the user experience and operating modes of various mobile products. I'd like to use Sketch or Photoshop to design prototypes when I got some inspirations.<br><br>
+In life, I am a senior music enthusiast and collector of classic old songs. Welcome to follow my Netease Cloud Music account. I also like to Shoot some pool or workout for a while, I mainly focus on health-preserving activities now.<br><br>
+Since I came into contact with the first stray cat in 2021, I have participated in the rescue of more than 10 stray cats. I occasionally share my daily life with them in Xiaohongshu. Time with these cats always gives me extra peace of mind.<br><br>
+What’s more:<br>
+I had Participated in the translation of the book "Recommender Systems " by Charu C. Aggarwal. And I have one patent under application which publication number is CN115756466A.
