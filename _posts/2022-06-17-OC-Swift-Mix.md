@@ -63,6 +63,6 @@ swift要想被oc访问到的前提是需要使用关键字 @objc @objcMembers,�
 
 [Swift Static Libraries迁移实践](https://juejin.cn/post/6844903710909267976)
 
-[^1]:[Flutter iOS OC 混编 Swift 遭遇动态库和静态库问题填坑](https://www.agora.io/cn/community/blog-120-category-24163)
+[Flutter iOS OC 混编 Swift 遭遇动态库和静态库问题填坑](https://www.agora.io/cn/community/blog-120-category-24163)
 
 
