@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "OC+Swift 混编知多少"
+title:      "OC+Swift 混编随记📝"
 subtitle:   "简单记录自己在混编时遇到的困惑"
 date:       2022-06-17 15:30:00
 author:     "Self"
@@ -57,7 +57,18 @@ swift要想被oc访问到的前提是需要使用关键字 @objc @objcMembers,�
 | swift | OC | 对应的OC库必须是modular，使用@import引入 |
 | swift | swift | import PodName |
 
-### 相关资料
+### 注意
+在引用头文件时，一般系统库和三方库都会使用尖括号的引用方式，pod内部一般是双引号头文件，不确定用哪个可以用如下宏判断一下。
+
+```objc
+    #if __has_include(<SamplePod/SamplePod-Swift.h>)
+    #import <SamplePod/SamplePod-Swift.h>
+    #else
+    #import "SamplePod-Swift.h"
+    #endif
+```
+
+## 相关资料
 
 [Swift与OC混编](https://blog.csdn.net/u012477117/article/details/122727567)
 
